@@ -4,33 +4,24 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- main
+  branches:
+    include:
+      main
 
 pool:
-  vmImage: ubuntu-latest
-strategy:
-  matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
+  vmImage: ‘ubuntu-latest’
 
 steps:
-- task: UsePythonVersion@0
+  task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+    versionSpec: ‘3.x’
+    addToPath: true
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+-script: 
+  python -m pip install  — upgrade pip
+  pip install -r requirements.txt
+  displayName: ‘Install dependencies’
 
-- script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+— script: |
+  python -m unittest discover -s tests -p ‘*_test.py’
+  displayName: ‘Run tests’
